@@ -32,7 +32,7 @@ shinyServer(function(input, output) {
   
   
   
-  
+  ## Distributions tab =========================================================
   
   output$title <- renderText({
     paste0("Crimes committed in Boston from ", min(crime_data()$Date),
@@ -63,6 +63,14 @@ shinyServer(function(input, output) {
       scale_fill_brewer()
   })
   
+  
+  
+  ## Heatmap tab ===============================================================
+  
+  output$count_text <- renderText({
+    paste0("Total Crimes Displayed: ", format(nrow(crime_loc()),
+                                              big.mark = ","))
+  })
   output$crimemap <- renderPlot({
     boston <- get_map(location = c(mean(crime_loc()$Long),
                                    mean(crime_loc()$Lat)),

@@ -33,8 +33,8 @@ shinyUI(fluidPage(
                   plotOutput("crimeplot"),
                   plotOutput("timecrime")),
         tabPanel("Heatmap",
-                  plotOutput("crimemap",
-                             width = 1000, height = 1000))
+                 h3(textOutput("count_text")),
+                 plotOutput("crimemap", width = 1000, height = 1000))
       )
       
     )
