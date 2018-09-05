@@ -12,10 +12,8 @@ library(ggplot2)
 
 shinyServer(function(input, output) {
   
-  
+#### Creating data sets ========================================================
   crime_data_raw <- readRDS("Data\\crime_data_raw.rds")
-  
-  
   
   crime_data <- reactive({
     crime_data_raw %>% 
@@ -26,6 +24,15 @@ shinyServer(function(input, output) {
       filter(Date >= min(input$daterange), Date <= max(input$daterange),
              OFFENSE_CODE_GROUP == input$targcrime | input$targcrime == "ALL")
   })
+  
+  crime_loc <- reactive({
+    select(crime_data(), Long, Lat) %>% 
+      filter(!is.na(Long), Lat != -1)
+  })
+  
+  
+  
+  
   
   output$title <- renderText({
     paste0("Crimes committed in Boston from ", min(crime_data()$Date),
@@ -39,7 +46,8 @@ shinyServer(function(input, output) {
     
   
   output$shootingpct <- renderText({
-    paste(round(mean(crime_data()$Shooting)*100, digits = 2), "% of crimes involved shootings")
+    paste0(round(mean(crime_data()$Shooting)*100, digits = 2),
+          "% of crimes involved shootings")
   })
   output$crimeplot <- renderPlot({
     crime_data() %>% 
@@ -54,5 +62,21 @@ shinyServer(function(input, output) {
       geom_density() + ggtitle("Time of Day") +
       scale_fill_brewer()
   })
+  
+  output$crimemap <- renderPlot({
+    boston <- get_map(location = c(mean(crime_loc()$Long),
+                                   mean(crime_loc()$Lat)),
+                      zoom = 12)
+    
+    ggmap(boston) + 
+      stat_density2d(data = crime_loc(),
+                     aes(x = Long, y = Lat,
+                         fill = ..level..,
+                         alpha = ..level..),
+                     geom = "polygon") +
+      scale_alpha_continuous(range = c(0.1, .4))
+  })
+  
+  
 
 })

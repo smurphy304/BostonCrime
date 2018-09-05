@@ -27,9 +27,15 @@ shinyUI(fluidPage(
 
     # Show a plot of the generated distribution
     mainPanel(
-      h3(textOutput("shootingpct")),
-      plotOutput("crimeplot"),
-      plotOutput("timecrime")
+      tabsetPanel(
+        tabPanel("Distributions",
+                  h3(textOutput("shootingpct")),
+                  plotOutput("crimeplot"),
+                  plotOutput("timecrime")),
+        tabPanel("Heatmap",
+                  plotOutput("crimemap",
+                             width = 1000, height = 1000))
+      )
       
     )
   )
