@@ -13,7 +13,7 @@ library(ggplot2)
 shinyServer(function(input, output) {
   
   
-  crime_data_raw <- readRDS("C:\\Users\\Sean Murphy\\Documents\\BostonCrime\\Data\\crime_data_raw.rds")
+  crime_data_raw <- readRDS("Data\\crime_data_raw.rds")
   
   
   
