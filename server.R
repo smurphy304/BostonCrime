@@ -9,6 +9,8 @@ library(shiny)
 library(dplyr)
 library(tidyr)
 library(ggplot2)
+library(purrr)
+library(ggmap)
 
 shinyServer(function(input, output) {
   
@@ -30,6 +32,8 @@ shinyServer(function(input, output) {
       filter(!is.na(Long), Lat != -1)
   })
   
+  ## Loading presaved ggmap (See renderplot notes)
+  load("~/BostonCrime/Data/boston_img.rda")
   
   
   ## Distributions tab =========================================================
@@ -71,10 +75,13 @@ shinyServer(function(input, output) {
     paste0("Total Crimes Displayed: ", format(nrow(crime_loc()),
                                               big.mark = ","))
   })
+  
   output$crimemap <- renderPlot({
-    boston <- get_map(location = c(mean(crime_loc()$Long),
-                                   mean(crime_loc()$Lat)),
-                      zoom = 12)
+    ## Due to google api restrictions these calls can only be made once a day
+    # key <- "AIzaSyDm2VwNgikxRvzLlBFngp7Ja6mRSBAwpfE"
+    # boston <- get_map(location = c(mean(crime_loc()$Long),
+    #                                mean(crime_loc()$Lat)),
+    #                   source = "google", zoom = 12, api_key = key)
     
     ggmap(boston) + 
       stat_density2d(data = crime_loc(),
