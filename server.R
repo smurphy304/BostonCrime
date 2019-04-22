@@ -33,7 +33,7 @@ shinyServer(function(input, output) {
   })
   
   ## Loading presaved ggmap (See renderplot notes)
-  load("~/BostonCrime/Data/boston_img.rda")
+  load("Data/boston_img.rda")
   
   
   ## Distributions tab =========================================================
